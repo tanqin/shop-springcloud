@@ -15,6 +15,7 @@
     <module>shop-web</module>
     <module>shop-eureka</module>
     <module>shop-common</module>
+    <module>shop-common-db</module>
   </modules>
 
   <properties>
