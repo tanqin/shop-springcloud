@@ -71,6 +71,19 @@ public class BrandServiceImpl implements BrandService {
      */
     @Override
     public List<Brand> findList(Brand brand) {
+        Example example = createExample(brand);
+
+        List<Brand> brandList = brandMapper.selectByExample(example);
+        return brandList;
+    }
+
+    /**
+     * 创建条件构造器方法
+     *
+     * @param brand
+     * @return
+     */
+    public Example createExample(Brand brand) {
         // 自定义搜索对象
         Example example = new Example(Brand.class);
         // 条件构造器
@@ -85,7 +98,6 @@ public class BrandServiceImpl implements BrandService {
             }
         }
 
-        List<Brand> brandList = brandMapper.selectByExample(example);
-        return brandList;
+        return example;
     }
 }
