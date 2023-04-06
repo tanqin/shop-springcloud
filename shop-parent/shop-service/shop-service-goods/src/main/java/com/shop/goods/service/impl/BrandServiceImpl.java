@@ -44,4 +44,14 @@ public class BrandServiceImpl implements BrandService {
         // insertSelective 只会选择有值的项
         brandMapper.insertSelective(brand);
     }
+
+    /**
+     * 修改品牌信息
+     *
+     * @param brand
+     */
+    @Override
+    public void update(Brand brand) {
+        brandMapper.updateByPrimaryKeySelective(brand);
+    }
 }
