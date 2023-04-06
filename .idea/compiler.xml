@@ -9,6 +9,7 @@
         <module name="shop-common-db" />
         <module name="shop-eureka" />
         <module name="shop-common" />
+        <module name="shop-service-goods-api" />
       </profile>
     </annotationProcessing>
   </component>
@@ -21,6 +22,7 @@
       <module name="shop-parent" options="" />
       <module name="shop-service" options="" />
       <module name="shop-service-api" options="" />
+      <module name="shop-service-goods-api" options="-parameters" />
       <module name="shop-web" options="" />
     </option>
   </component>
