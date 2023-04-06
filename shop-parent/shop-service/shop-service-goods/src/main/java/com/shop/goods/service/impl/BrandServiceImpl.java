@@ -97,6 +97,26 @@ public class BrandServiceImpl implements BrandService {
     }
 
     /**
+     * 品牌条件分页查询
+     *
+     * @param brand
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public PageInfo<Brand> findPage(Brand brand, Integer page, Integer size) {
+        // 分页查询
+        PageHelper.startPage(page, size);
+
+        // 条件查询
+        Example example = createExample(brand);
+        List<Brand> brandList = brandMapper.selectByExample(example);
+
+        return new PageInfo<>(brandList);
+    }
+
+    /**
      * 创建条件构造器方法
      *
      * @param brand

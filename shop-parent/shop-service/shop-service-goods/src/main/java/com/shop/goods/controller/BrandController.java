@@ -94,4 +94,18 @@ public class BrandController {
         PageInfo<Brand> pageInfo = brandService.findPage(page, size);
         return new Result<>(true, StatusCode.OK, "品牌分页查询成功！", pageInfo);
     }
+
+    /**
+     * 品牌条件分页查询
+     *
+     * @param brand
+     * @param page
+     * @param size
+     * @return
+     */
+    @PostMapping("/search/{page}/{size}")
+    public Result<PageInfo<Brand>> findPage(@RequestBody Brand brand, @PathVariable(value = "page") Integer page, @PathVariable(value = "size") Integer size) {
+        PageInfo<Brand> pageInfo = brandService.findPage(brand, page, size);
+        return new Result<>(true, StatusCode.OK, "品牌条件分页查询成功！", pageInfo);
+    }
 }

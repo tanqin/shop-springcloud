@@ -54,4 +54,14 @@ public interface BrandService {
      * @return
      */
     PageInfo<Brand> findPage(Integer page, Integer size);
+
+    /**
+     * 品牌条件分页查询
+     *
+     * @param brand
+     * @param page
+     * @param size
+     * @return
+     */
+    PageInfo<Brand> findPage(Brand brand, Integer page, Integer size);
 }
