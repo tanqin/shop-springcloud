@@ -5,10 +5,7 @@ import com.shop.goods.service.BrandService;
 import entity.Result;
 import entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,14 @@ public class BrandController {
     public Result<List<Brand>> findAll() {
         List<Brand> list = brandService.findAll();
         return new Result<>(true, StatusCode.OK, "查询品牌集合成功！", list);
+    }
+
+    /**
+     * 根据 ID 查询品牌信息
+     */
+    @GetMapping("/{id}")
+    public Result<Brand> findById(@PathVariable(value = "id") Integer id) {
+        Brand brand = brandService.findById(id);
+        return new Result<>(true, StatusCode.OK, "查询品牌信息成功！", brand);
     }
 }
