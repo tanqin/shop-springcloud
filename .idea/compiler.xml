@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="shop-eureka" />
+        <module name="shop-common" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="shop-common" options="-parameters" />
       <module name="shop-eureka" options="-parameters" />
       <module name="shop-gateway" options="" />
       <module name="shop-parent" options="" />
