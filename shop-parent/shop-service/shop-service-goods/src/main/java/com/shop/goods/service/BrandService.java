@@ -14,4 +14,11 @@ public interface BrandService {
      * 根据 ID 查询品牌信息
      */
     Brand findById(Integer id);
+
+    /**
+     * 增加品牌
+     *
+     * @param brand
+     */
+    void add(Brand brand);
 }

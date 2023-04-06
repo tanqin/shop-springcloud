@@ -33,4 +33,15 @@ public class BrandServiceImpl implements BrandService {
     public Brand findById(Integer id) {
         return brandMapper.selectByPrimaryKey(id);
     }
+
+    /**
+     * 增加品牌
+     *
+     * @param brand
+     */
+    @Override
+    public void add(Brand brand) {
+        // insertSelective 只会选择有值的项
+        brandMapper.insertSelective(brand);
+    }
 }
