@@ -1,10 +1,10 @@
 package com.shop.goods.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.shop.entity.Result;
+import com.shop.entity.StatusCode;
 import com.shop.goods.pojo.Brand;
 import com.shop.goods.service.BrandService;
-import entity.Result;
-import entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,6 +105,7 @@ public class BrandController {
      */
     @PostMapping("/search/{page}/{size}")
     public Result<PageInfo<Brand>> findPage(@RequestBody Brand brand, @PathVariable(value = "page") Integer page, @PathVariable(value = "size") Integer size) {
+//        int i = 1 / 0;
         PageInfo<Brand> pageInfo = brandService.findPage(brand, page, size);
         return new Result<>(true, StatusCode.OK, "品牌条件分页查询成功！", pageInfo);
     }
