@@ -1,5 +1,6 @@
 package com.shop.goods.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.shop.goods.pojo.Brand;
 import com.shop.goods.service.BrandService;
 import entity.Result;
@@ -79,5 +80,18 @@ public class BrandController {
     public Result<List<Brand>> findList(@RequestBody Brand brand) {
         List<Brand> brandList = brandService.findList(brand);
         return new Result<>(true, StatusCode.OK, "品牌条件查询成功！", brandList);
+    }
+
+    /**
+     * 品牌分页查询
+     *
+     * @param page
+     * @param size
+     * @return
+     */
+    @GetMapping("/search/{page}/{size}")
+    public Result<PageInfo<Brand>> findPage(@PathVariable(value = "page") Integer page, @PathVariable(value = "size") Integer size) {
+        PageInfo<Brand> pageInfo = brandService.findPage(page, size);
+        return new Result<>(true, StatusCode.OK, "品牌分页查询成功！", pageInfo);
     }
 }

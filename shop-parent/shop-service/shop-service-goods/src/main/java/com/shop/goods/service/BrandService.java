@@ -1,5 +1,6 @@
 package com.shop.goods.service;
 
+import com.github.pagehelper.PageInfo;
 import com.shop.goods.pojo.Brand;
 
 import java.util.List;
@@ -44,4 +45,13 @@ public interface BrandService {
      * @param brand
      */
     List<Brand> findList(Brand brand);
+
+    /**
+     * 品牌分页查询
+     *
+     * @param page
+     * @param size
+     * @return
+     */
+    PageInfo<Brand> findPage(Integer page, Integer size);
 }

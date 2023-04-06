@@ -1,5 +1,7 @@
 package com.shop.goods.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.shop.goods.dao.BrandMapper;
 import com.shop.goods.pojo.Brand;
 import com.shop.goods.service.BrandService;
@@ -75,6 +77,23 @@ public class BrandServiceImpl implements BrandService {
 
         List<Brand> brandList = brandMapper.selectByExample(example);
         return brandList;
+    }
+
+    /**
+     * 品牌分页查询
+     *
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public PageInfo<Brand> findPage(Integer page, Integer size) {
+        // 分页实现。后面的查询紧跟集合查询
+        PageHelper.startPage(page, size);
+
+        List<Brand> brandList = brandMapper.selectAll();
+
+        return new PageInfo<>(brandList);
     }
 
     /**
