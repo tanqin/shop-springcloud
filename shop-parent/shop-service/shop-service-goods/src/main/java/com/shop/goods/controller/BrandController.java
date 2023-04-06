@@ -56,4 +56,28 @@ public class BrandController {
         brandService.update(brand);
         return new Result(true, StatusCode.OK, "修改品牌成功！");
     }
+
+    /**
+     * 根据 ID 删除品牌
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public Result delete(@PathVariable(value = "id") Integer id) {
+        brandService.delete(id);
+        return new Result(true, StatusCode.OK, "删除品牌成功！");
+    }
+
+    /**
+     * 品牌条件查询
+     *
+     * @param brand
+     * @return
+     */
+    @PostMapping("/search")
+    public Result<List<Brand>> findList(@RequestBody Brand brand) {
+        List<Brand> brandList = brandService.findList(brand);
+        return new Result<>(true, StatusCode.OK, "品牌条件查询成功！", brandList);
+    }
 }

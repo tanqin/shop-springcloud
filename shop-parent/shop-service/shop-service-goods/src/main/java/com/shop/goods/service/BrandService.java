@@ -12,6 +12,8 @@ public interface BrandService {
 
     /**
      * 根据 ID 查询品牌信息
+     *
+     * @param id
      */
     Brand findById(Integer id);
 
@@ -24,6 +26,22 @@ public interface BrandService {
 
     /**
      * 修改品牌信息
+     *
+     * @param brand
      */
     void update(Brand brand);
+
+    /**
+     * 根据 ID 删除品牌
+     *
+     * @param id
+     */
+    void delete(Integer id);
+
+    /**
+     * 品牌条件查询
+     *
+     * @param brand
+     */
+    List<Brand> findList(Brand brand);
 }
