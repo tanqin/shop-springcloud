@@ -6,7 +6,6 @@ import org.csource.fastdfs.*;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
 /**
@@ -73,6 +72,14 @@ public class FastDFSUtil {
         return storageClient.get_file_info(groupName, remoteFileName);
     }
 
+    /**
+     * 文件下载
+     *
+     * @param groupName
+     * @param remoteFileName
+     * @return
+     * @throws Exception
+     */
     public static InputStream downloadFile(String groupName, String remoteFileName) throws Exception {
         // 创建一个 TrackerClient 对象，通过 TrackerClient 访问 TrackerServer 对象
         TrackerClient trackerClient = new TrackerClient();
@@ -85,13 +92,31 @@ public class FastDFSUtil {
         return new ByteArrayInputStream(buffer);
     }
 
+    /**
+     * 文件删除
+     *
+     * @param groupName
+     * @param remoteFileName
+     * @throws Exception
+     */
+    public static void deleteFile(String groupName, String remoteFileName) throws Exception {
+        // 创建一个 TrackerClient 对象，通过 TrackerClient 访问 TrackerServer 对象
+        TrackerClient trackerClient = new TrackerClient();
+        // 通过 TrackerClient 获取 TrackerServer 的链接对象
+        TrackerServer trackerServer = trackerClient.getConnection();
+        // 通过 TrackerServer 获取 Storage 对象，创建 StorageClient 对象存储 Storage 信息
+        StorageClient storageClient = new StorageClient(trackerServer, null);
+        // 删除文件
+        storageClient.delete_file(groupName, remoteFileName);
+    }
+
     public static void main(String[] args) throws Exception {
-        FileInfo fileInfo = getFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
+       /* FileInfo fileInfo = getFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
         System.out.println(fileInfo.getSourceIpAddr());
-        System.out.println(fileInfo.getFileSize());
+        System.out.println(fileInfo.getFileSize());*/
 
         // 文件下载
-        InputStream is = downloadFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
+        /*InputStream is = downloadFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
 
         // 将文件写入本地磁盘
         FileOutputStream os = new FileOutputStream("D:/1.png");
@@ -103,6 +128,9 @@ public class FastDFSUtil {
         }
         os.flush();
         os.close();
-        is.close();
+        is.close();*/
+
+        // 删除下载
+        deleteFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
     }
 }
