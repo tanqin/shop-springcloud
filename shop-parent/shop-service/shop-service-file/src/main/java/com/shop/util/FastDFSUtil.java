@@ -2,10 +2,7 @@ package com.shop.util;
 
 import com.shop.file.FastDFSFile;
 import org.csource.common.NameValuePair;
-import org.csource.fastdfs.ClientGlobal;
-import org.csource.fastdfs.StorageClient;
-import org.csource.fastdfs.TrackerClient;
-import org.csource.fastdfs.TrackerServer;
+import org.csource.fastdfs.*;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -31,6 +28,13 @@ public class FastDFSUtil {
         }
     }
 
+    /**
+     * 上传文件
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
     public static String[] upload(FastDFSFile file) throws Exception {
         // 获取文件上传者信息
         NameValuePair[] metaList = new NameValuePair[1];
@@ -44,5 +48,30 @@ public class FastDFSUtil {
         //执行文件上传
         String[] uploads = storageClient.upload_file(file.getContent(), file.getExt(), metaList);
         return uploads;
+    }
+
+    /**
+     * 获取文件信息
+     *
+     * @param groupName      文件组名
+     * @param remoteFileName 文件存储路径名
+     * @return
+     * @throws Exception
+     */
+    public static FileInfo getFile(String groupName, String remoteFileName) throws Exception {
+        // 创建一个 TrackerClient 对象，通过 TrackerClient 访问 TrackerServer 对象
+        TrackerClient trackerClient = new TrackerClient();
+        // 通过 TrackerClient 获取 TrackerServer 的链接对象
+        TrackerServer trackerServer = trackerClient.getConnection();
+        // 通过 TrackerServer 获取 Storage 对象，创建 StorageClient 对象存储 Storage 信息
+        StorageClient storageClient = new StorageClient(trackerServer, null);
+        // 获取文件信息
+        return storageClient.get_file_info(groupName, remoteFileName);
+    }
+
+    public static void main(String[] args) throws Exception {
+        FileInfo fileInfo = getFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
+        System.out.println(fileInfo.getSourceIpAddr());
+        System.out.println(fileInfo.getFileSize());
     }
 }
