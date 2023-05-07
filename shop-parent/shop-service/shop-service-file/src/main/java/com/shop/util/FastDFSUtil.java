@@ -139,7 +139,24 @@ public class FastDFSUtil {
         // 通过 TrackerClient 获取 TrackerServer 的链接对象
         TrackerServer trackerServer = trackerClient.getConnection();
         return trackerClient.getFetchStorages(trackerServer, groupName, remoteFileName);
+    }
 
+    /**
+     * 获取 Tracker 服务地址
+     *
+     * @return
+     * @throws Exception
+     */
+    public static String getTrackerInfo() throws Exception {
+        // 创建一个 TrackerClient 对象，通过 TrackerClient 访问 TrackerServer 对象
+        TrackerClient trackerClient = new TrackerClient();
+        // 通过 TrackerClient 获取 TrackerServer 的链接对象
+        TrackerServer trackerServer = trackerClient.getConnection();
+        // 获取 Tracker 的 IP
+        String ip = trackerServer.getInetSocketAddress().getHostString();
+        // 获取 Tracker 的端口
+        int port = ClientGlobal.getG_tracker_http_port();
+        return "http://" + ip + ":" + port + "/";
     }
 
     public static void main(String[] args) throws Exception {
@@ -171,12 +188,15 @@ public class FastDFSUtil {
         System.out.println(storageServer.getInetSocketAddress().getHostString()); // 192.168.211.132*/
 
         // 获取 Storage 组的 IP 和端口信息
-        ServerInfo[] groups = getServerInfo("group1", "M00/00/00/wKjThGRTpmCAGF3RAAGCnk6H7-w934.png");
+       /* ServerInfo[] groups = getServerInfo("group1", "M00/00/00/wKjThGRTpmCAGF3RAAGCnk6H7-w934.png");
 
         for (ServerInfo group : groups) {
             System.out.println(group.getIpAddr()); // 192.168.211.132
             System.out.println(group.getPort()); // 23000
-        }
+        }*/
+
+        // 获取 Tracker 服务地址
+        System.out.println(getTrackerInfo()); // http://192.168.211.132:8080/
     }
 
 }

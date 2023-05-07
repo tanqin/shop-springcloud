@@ -27,7 +27,7 @@ public class FileController {
         String[] uploads = FastDFSUtil.upload(fastDFSFile);
 
         // 拼接文件访问地址
-        String url = "http://192.168.211.132:8080/" + uploads[0] + "/" + uploads[1];
+        String url = FastDFSUtil.getTrackerInfo() + uploads[0] + "/" + uploads[1];
 
         return new Result(true, StatusCode.OK, "上传成功！", url);
     }
