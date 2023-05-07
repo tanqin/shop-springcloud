@@ -110,6 +110,38 @@ public class FastDFSUtil {
         storageClient.delete_file(groupName, remoteFileName);
     }
 
+    /**
+     * 获取 Storage 信息
+     *
+     * @return
+     * @throws Exception
+     */
+    public static StorageServer getStorages() throws Exception {
+        // 创建一个 TrackerClient 对象，通过 TrackerClient 访问 TrackerServer 对象
+        TrackerClient trackerClient = new TrackerClient();
+        // 通过 TrackerClient 获取 TrackerServer 的链接对象
+        TrackerServer trackerServer = trackerClient.getConnection();
+        // 获取 storage 信息
+        return trackerClient.getStoreStorage(trackerServer);
+    }
+
+    /**
+     * 获取 Storage 组的 IP 和端口信息
+     *
+     * @param groupName
+     * @param remoteFileName
+     * @return
+     * @throws Exception
+     */
+    public static ServerInfo[] getServerInfo(String groupName, String remoteFileName) throws Exception {
+        // 创建一个 TrackerClient 对象，通过 TrackerClient 访问 TrackerServer 对象
+        TrackerClient trackerClient = new TrackerClient();
+        // 通过 TrackerClient 获取 TrackerServer 的链接对象
+        TrackerServer trackerServer = trackerClient.getConnection();
+        return trackerClient.getFetchStorages(trackerServer, groupName, remoteFileName);
+
+    }
+
     public static void main(String[] args) throws Exception {
        /* FileInfo fileInfo = getFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
         System.out.println(fileInfo.getSourceIpAddr());
@@ -131,6 +163,20 @@ public class FastDFSUtil {
         is.close();*/
 
         // 删除下载
-        deleteFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
+//        deleteFile("group1", "M00/00/00/wKjThGRTpEuAQvhHAAGCnk6H7-w659.png");
+
+        // 获取 Storage 信息
+      /*  StorageServer storageServer = getStorages();
+        System.out.println(storageServer.getStorePathIndex()); // 0
+        System.out.println(storageServer.getInetSocketAddress().getHostString()); // 192.168.211.132*/
+
+        // 获取 Storage 组的 IP 和端口信息
+        ServerInfo[] groups = getServerInfo("group1", "M00/00/00/wKjThGRTpmCAGF3RAAGCnk6H7-w934.png");
+
+        for (ServerInfo group : groups) {
+            System.out.println(group.getIpAddr()); // 192.168.211.132
+            System.out.println(group.getPort()); // 23000
+        }
     }
+
 }
