@@ -168,4 +168,18 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> findAll() {
         return categoryMapper.selectAll();
     }
+
+    /**
+     * 根据分类的父 ID 查询子分类节点集合
+     *
+     * @param pid
+     * @return
+     */
+    @Override
+    public List<Category> findByParentId(Integer pid) {
+        // select * from tb_category where parent_id = #{pid};
+        Category category = new Category();
+        category.setParentId(pid);
+        return categoryMapper.select(category);
+    }
 }

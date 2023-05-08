@@ -67,4 +67,12 @@ public interface CategoryService {
      * @return
      */
     List<Category> findAll();
+
+    /**
+     * 根据分类的父 ID 查询子分类节点集合
+     *
+     * @param pid
+     * @return
+     */
+    List<Category> findByParentId(Integer pid);
 }
