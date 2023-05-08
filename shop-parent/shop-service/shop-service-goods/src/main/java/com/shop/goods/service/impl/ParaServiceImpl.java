@@ -2,7 +2,9 @@ package com.shop.goods.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.shop.goods.dao.CategoryMapper;
 import com.shop.goods.dao.ParaMapper;
+import com.shop.goods.pojo.Category;
 import com.shop.goods.pojo.Para;
 import com.shop.goods.service.ParaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class ParaServiceImpl implements ParaService {
 
     @Autowired
     private ParaMapper paraMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
 
     /**
@@ -155,5 +160,21 @@ public class ParaServiceImpl implements ParaService {
     @Override
     public List<Para> findAll() {
         return paraMapper.selectAll();
+    }
+
+    /**
+     * 根据分类 ID 查询参数集合
+     *
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Para> findByCategoryId(Integer categoryId) {
+        // 根据分类 ID 查询 template_id
+        Category category = categoryMapper.selectByPrimaryKey(categoryId);
+        // 根据 template_id 查询参数集合
+        Para para = new Para();
+        para.setTemplateId(category.getTemplateId());
+        return paraMapper.select(para);
     }
 }

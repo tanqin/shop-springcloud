@@ -144,4 +144,16 @@ public class ParaController {
         List<Para> list = paraService.findAll();
         return new Result<List<Para>>(true, StatusCode.OK, "查询成功", list);
     }
+
+    /**
+     * 根据分类 ID 查询参数集合
+     *
+     * @param categoryId
+     * @return
+     */
+    @GetMapping(value = "/category/{id}")
+    public Result<List<Para>> getByCategoryId(@PathVariable(value = "id") Integer categoryId) {
+        List<Para> paraList = paraService.findByCategoryId(categoryId);
+        return new Result<>(true, StatusCode.OK, "查询参数列表成功！", paraList);
+    }
 }
