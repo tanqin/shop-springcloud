@@ -5,63 +5,66 @@ import com.shop.goods.pojo.Brand;
 
 import java.util.List;
 
+/****
+ * @Author:shenkunlin
+ * @Description:Brand业务层接口
+ * @Date 2019/6/14 0:16
+ *****/
 public interface BrandService {
-    /**
-     * 查询所有品牌
-     */
-    List<Brand> findAll();
 
-    /**
-     * 根据 ID 查询品牌信息
-     *
+    /***
+     * Brand多条件分页查询
+     * @param brand
+     * @param page
+     * @param size
+     * @return
+     */
+    PageInfo<Brand> findPage(Brand brand, int page, int size);
+
+    /***
+     * Brand分页查询
+     * @param page
+     * @param size
+     * @return
+     */
+    PageInfo<Brand> findPage(int page, int size);
+
+    /***
+     * Brand多条件搜索方法
+     * @param brand
+     * @return
+     */
+    List<Brand> findList(Brand brand);
+
+    /***
+     * 删除Brand
      * @param id
      */
-    Brand findById(Integer id);
+    void delete(Integer id);
 
-    /**
-     * 增加品牌
-     *
+    /***
+     * 修改Brand数据
+     * @param brand
+     */
+    void update(Brand brand);
+
+    /***
+     * 新增Brand
      * @param brand
      */
     void add(Brand brand);
 
     /**
-     * 修改品牌信息
-     *
-     * @param brand
-     */
-    void update(Brand brand);
-
-    /**
-     * 根据 ID 删除品牌
+     * 根据ID查询Brand
      *
      * @param id
-     */
-    void delete(Integer id);
-
-    /**
-     * 品牌条件查询
-     *
-     * @param brand
-     */
-    List<Brand> findList(Brand brand);
-
-    /**
-     * 品牌分页查询
-     *
-     * @param page
-     * @param size
      * @return
      */
-    PageInfo<Brand> findPage(Integer page, Integer size);
+    Brand findById(Integer id);
 
-    /**
-     * 品牌条件分页查询
-     *
-     * @param brand
-     * @param page
-     * @param size
+    /***
+     * 查询所有Brand
      * @return
      */
-    PageInfo<Brand> findPage(Brand brand, Integer page, Integer size);
+    List<Brand> findAll();
 }
