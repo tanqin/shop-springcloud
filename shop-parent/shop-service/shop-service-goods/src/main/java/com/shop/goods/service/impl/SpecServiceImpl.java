@@ -2,7 +2,9 @@ package com.shop.goods.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.shop.goods.dao.CategoryMapper;
 import com.shop.goods.dao.SpecMapper;
+import com.shop.goods.pojo.Category;
 import com.shop.goods.pojo.Spec;
 import com.shop.goods.service.SpecService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class SpecServiceImpl implements SpecService {
 
     @Autowired
     private SpecMapper specMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
 
     /**
@@ -155,5 +160,21 @@ public class SpecServiceImpl implements SpecService {
     @Override
     public List<Spec> findAll() {
         return specMapper.selectAll();
+    }
+
+    /**
+     * 查询规格集合信息
+     *
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Spec> findByCategoryId(Integer categoryId) {
+        // 根据分类 ID 查询 template_id
+        Category category = categoryMapper.selectByPrimaryKey(categoryId);
+        // 根据分类的模板 ID 查询规格集合
+        Spec spec = new Spec();
+        spec.setTemplateId(category.getTemplateId());
+        return specMapper.select(spec);
     }
 }
