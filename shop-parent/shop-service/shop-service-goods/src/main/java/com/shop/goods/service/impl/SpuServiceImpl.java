@@ -333,11 +333,47 @@ public class SpuServiceImpl implements SpuService {
         Spu spu = spuMapper.selectByPrimaryKey(spuId);
         // 查询商品是否符合审核条件
         if ("1".equalsIgnoreCase(spu.getIsDelete())) {
-            throw new RuntimeException("不能对已删除商品进行删除！");
+            throw new RuntimeException("不能对已删除商品进行审核！");
         }
         // 修改商品审核状态
         spu.setStatus("1"); // 审核通过
         spu.setIsMarketable("1"); // 上架
         spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    @Override
+    public void pull(Long spuId) {
+        Spu spu = spuMapper.selectByPrimaryKey(spuId);
+
+        // 判断商品是否符合下架条件
+        if ("1".equalsIgnoreCase(spu.getIsDelete())) {
+            throw new RuntimeException("不能对已删除的商品进行下架！");
+        }
+
+        spu.setIsMarketable("0"); // 商品下架
+        spuMapper.updateByPrimaryKey(spu);
+    }
+
+    /**
+     * 商品上架
+     *
+     * @param spuId
+     */
+    @Override
+    public void put(Long spuId) {
+        Spu spu = spuMapper.selectByPrimaryKey(spuId);
+        // 判断商品是否已删除
+        if ("1".equalsIgnoreCase(spu.getIsDelete())) {
+            throw new RuntimeException("不能对已删除商品进行上架");
+        }
+
+        // 判断商品是否审核通过
+        if (!"1".equalsIgnoreCase(spu.getStatus())) {
+            throw new RuntimeException("未审核通过的商品无法上架！");
+        }
+
+        // 修改上架状态
+        spu.setStatus("1");
+        spuMapper.updateByPrimaryKey(spu);
     }
 }

@@ -178,4 +178,28 @@ public class SpuController {
         spuService.audit(spuId);
         return new Result(true, StatusCode.OK, "审核成功！");
     }
+
+    /**
+     * 根据 spuId 下架商品
+     *
+     * @param spuId
+     * @return
+     */
+    @PutMapping("/pull/{id}")
+    public Result pull(@PathVariable(value = "id") Long spuId) {
+        spuService.pull(spuId);
+        return new Result(true, StatusCode.OK, "下架成功！");
+    }
+
+    /**
+     * 根据 spuId 上架商品
+     *
+     * @param spuId
+     * @return
+     */
+    @PutMapping("/put/{id}")
+    public Result put(@PathVariable(value = "id") Long spuId) {
+        spuService.put(spuId);
+        return new Result(true, StatusCode.OK, "上架成功！");
+    }
 }

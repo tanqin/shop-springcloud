@@ -90,4 +90,18 @@ public interface SpuService {
      * @param spuId
      */
     void audit(Long spuId);
+
+    /**
+     * 商品下架
+     *
+     * @param spuId
+     */
+    void pull(Long spuId);
+
+    /**
+     * 上架商品
+     *
+     * @param spuId
+     */
+    void put(Long spuId);
 }
