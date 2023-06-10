@@ -202,4 +202,16 @@ public class SpuController {
         spuService.put(spuId);
         return new Result(true, StatusCode.OK, "上架成功！");
     }
+
+    /**
+     * 商品批量上架
+     *
+     * @param spuIds
+     * @return
+     */
+    @PutMapping("/putMany")
+    public Result putMany(@RequestBody Long[] spuIds) {
+        spuService.putMany(spuIds);
+        return new Result(true, StatusCode.OK, "上架成功！");
+    }
 }

@@ -104,4 +104,11 @@ public interface SpuService {
      * @param spuId
      */
     void put(Long spuId);
+
+    /**
+     * 批量上架商品
+     *
+     * @param spuIds
+     */
+    void putMany(Long[] spuIds);
 }

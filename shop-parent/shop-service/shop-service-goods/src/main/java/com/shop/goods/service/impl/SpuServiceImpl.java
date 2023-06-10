@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -375,5 +376,30 @@ public class SpuServiceImpl implements SpuService {
         // 修改上架状态
         spu.setStatus("1");
         spuMapper.updateByPrimaryKey(spu);
+    }
+
+    /**
+     * 批量上架
+     *
+     * @param spuIds
+     */
+    @Override
+    public void putMany(Long[] spuIds) {
+        // update tb_sku set is_marketable = '1' where id in(spuIds) and is_delete = '0' and status = '1'
+        Example example = new Example(Spu.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        // id in (spuIds)
+        criteria.andIn("id", Arrays.asList(spuIds));
+        // is_delete = '0'
+        criteria.andEqualTo("isDelete", '0');
+        // status = '1'
+        criteria.andEqualTo("status", '1');
+
+        // 准备修改的数据
+        Spu spu = new Spu();
+        spu.setIsMarketable("1"); // 上架
+
+        spuMapper.updateByExampleSelective(spu, example);
     }
 }
