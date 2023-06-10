@@ -1,16 +1,23 @@
 package com.shop.goods.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.shop.entity.IdWorker;
+import com.shop.goods.dao.BrandMapper;
+import com.shop.goods.dao.CategoryMapper;
+import com.shop.goods.dao.SkuMapper;
 import com.shop.goods.dao.SpuMapper;
-import com.shop.goods.pojo.Spu;
+import com.shop.goods.pojo.*;
 import com.shop.goods.service.SpuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /****
  * @Author:shenkunlin
@@ -22,6 +29,18 @@ public class SpuServiceImpl implements SpuService {
 
     @Autowired
     private SpuMapper spuMapper;
+
+    @Autowired
+    private IdWorker idWorker;
+
+    @Autowired
+    private SkuMapper skuMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
+
+    @Autowired
+    private BrandMapper brandMapper;
 
 
     /**
@@ -223,5 +242,84 @@ public class SpuServiceImpl implements SpuService {
     @Override
     public List<Spu> findAll() {
         return spuMapper.selectAll();
+    }
+
+    /**
+     * 新增/修改商品
+     *
+     * @param goods 商品组合对象
+     */
+    @Override
+    public void saveGoods(Goods goods) {
+        // spu
+        Spu spu = goods.getSpu();
+        // 判断 spuId 是否为空
+        if (spu.getId() == null) {
+            // 新增商品
+            spu.setId(idWorker.nextId());
+            spuMapper.insertSelective(spu);
+        } else {
+            // 修改商品
+            // 更新 spu
+            spuMapper.updateByPrimaryKey(spu);
+            // 删除所有旧的 sku，添加新的 sku
+            Sku sku = new Sku();
+            sku.setSpuId(spu.getId());
+            skuMapper.delete(sku);
+        }
+
+
+        // sku
+        List<Sku> skuList = goods.getSkuList();
+        Integer category3Id = spu.getCategory3Id();
+        Category category = categoryMapper.selectByPrimaryKey(category3Id);
+        Brand brand = brandMapper.selectByPrimaryKey(spu.getBrandId());
+
+        Date date = new Date();
+        for (Sku sku : skuList) {
+            sku.setId(idWorker.nextId());
+            String name = spu.getName();
+            // 防止空指针
+            if (StringUtils.isEmpty(sku.getSpec())) {
+                sku.setSpec("{}");
+            }
+            // spec: {"电视音响效果":"立体声","电视屏幕尺寸":"20英寸","尺码":"165"}
+            // 将 spec 转 Map
+            Map<String, String> specMap = JSON.parseObject(sku.getSpec(), Map.class);
+            for (Map.Entry<String, String> entry : specMap.entrySet()) {
+                name += entry.getValue();
+            }
+            sku.setName(name); // spu 名称 + 规格信息
+            sku.setCreateTime(date);
+            sku.setUpdateTime(date);
+            sku.setSpuId(spu.getId());
+            sku.setCategoryId(category3Id); // 3 级分类的 id
+            sku.setCategoryName(category.getName()); // 3 级分类的分类名
+            sku.setBrandName(brand.getName()); // 品牌名称
+
+            skuMapper.insertSelective(sku);
+        }
+    }
+
+    /**
+     * 根据 spuId 查询 goods
+     *
+     * @param id spuId
+     * @return
+     */
+    @Override
+    public Goods findGoodsById(Long id) {
+        // 根据 spuId 查询 Spu
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+
+        // 根据 spuId 查询 List<Sku>
+        Sku sku = new Sku();
+        sku.setSpuId(id);
+        List<Sku> skuList = skuMapper.select(sku);
+
+        Goods goods = new Goods();
+        goods.setSpu(spu);
+        goods.setSkuList(skuList);
+        return goods;
     }
 }

@@ -1,6 +1,7 @@
 package com.shop.goods.service;
 
 import com.github.pagehelper.PageInfo;
+import com.shop.goods.pojo.Goods;
 import com.shop.goods.pojo.Spu;
 
 import java.util.List;
@@ -67,4 +68,19 @@ public interface SpuService {
      * @return
      */
     List<Spu> findAll();
+
+    /**
+     * 添加商品
+     *
+     * @param goods 商品组合对象
+     */
+    void saveGoods(Goods goods);
+
+    /**
+     * 根据 spuId 查询 goods 数据
+     *
+     * @param id spuId
+     * @return
+     */
+    Goods findGoodsById(Long id);
 }

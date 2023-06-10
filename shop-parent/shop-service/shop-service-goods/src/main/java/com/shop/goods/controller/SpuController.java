@@ -3,6 +3,7 @@ package com.shop.goods.controller;
 import com.github.pagehelper.PageInfo;
 import com.shop.entity.Result;
 import com.shop.entity.StatusCode;
+import com.shop.goods.pojo.Goods;
 import com.shop.goods.pojo.Spu;
 import com.shop.goods.service.SpuService;
 import io.swagger.annotations.*;
@@ -143,5 +144,29 @@ public class SpuController {
         //调用SpuService实现查询所有Spu
         List<Spu> list = spuService.findAll();
         return new Result<List<Spu>>(true, StatusCode.OK, "查询成功", list);
+    }
+
+    /**
+     * 新增/修改商品
+     *
+     * @param goods 商品信息
+     * @return
+     */
+    @PostMapping("/save")
+    public Result saveGoods(@RequestBody Goods goods) {
+        spuService.saveGoods(goods);
+        return new Result(true, StatusCode.OK, "保存商品成功！");
+    }
+
+    /**
+     * 根据 skuId 查询 goods 信息
+     *
+     * @param spuId
+     * @return
+     */
+    @GetMapping("/goods/{id}")
+    public Result<Goods> findGoodsById(@PathVariable(value = "id") Long spuId) {
+        Goods goods = spuService.findGoodsById(spuId);
+        return new Result<>(true, StatusCode.OK, "查询商品信息成功！", goods);
     }
 }
