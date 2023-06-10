@@ -169,4 +169,13 @@ public class SpuController {
         Goods goods = spuService.findGoodsById(spuId);
         return new Result<>(true, StatusCode.OK, "查询商品信息成功！", goods);
     }
+
+    /**
+     * 根据 spuId 审核商品
+     */
+    @PutMapping("/audit/{id}")
+    public Result audit(@PathVariable(value = "id") Long spuId) {
+        spuService.audit(spuId);
+        return new Result(true, StatusCode.OK, "审核成功！");
+    }
 }

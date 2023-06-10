@@ -83,4 +83,11 @@ public interface SpuService {
      * @return
      */
     Goods findGoodsById(Long id);
+
+    /**
+     * 商品审核
+     *
+     * @param spuId
+     */
+    void audit(Long spuId);
 }

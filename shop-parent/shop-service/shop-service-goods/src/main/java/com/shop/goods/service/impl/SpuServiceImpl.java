@@ -322,4 +322,22 @@ public class SpuServiceImpl implements SpuService {
         goods.setSkuList(skuList);
         return goods;
     }
+
+    /**
+     * 商品审核
+     *
+     * @param spuId
+     */
+    @Override
+    public void audit(Long spuId) {
+        Spu spu = spuMapper.selectByPrimaryKey(spuId);
+        // 查询商品是否符合审核条件
+        if ("1".equalsIgnoreCase(spu.getIsDelete())) {
+            throw new RuntimeException("不能对已删除商品进行删除！");
+        }
+        // 修改商品审核状态
+        spu.setStatus("1"); // 审核通过
+        spu.setIsMarketable("1"); // 上架
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
 }
