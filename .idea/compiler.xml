@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="shop-common-db" />
+        <module name="shop-service-canal" />
         <module name="shop-service-file" />
         <module name="shop-eureka" />
         <module name="shop-service-goods" />
@@ -27,6 +28,7 @@
       <module name="shop-parent" options="" />
       <module name="shop-service" options="" />
       <module name="shop-service-api" options="" />
+      <module name="shop-service-canal" options="-parameters" />
       <module name="shop-service-file" options="-parameters" />
       <module name="shop-service-goods" options="-parameters" />
       <module name="shop-service-goods-api" options="-parameters" />
