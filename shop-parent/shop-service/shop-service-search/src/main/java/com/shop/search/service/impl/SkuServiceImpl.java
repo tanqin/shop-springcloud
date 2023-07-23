@@ -18,10 +18,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -77,7 +74,65 @@ public class SkuServiceImpl implements SkuService {
         List<String> brandList = searchBrandList(nativeSearchQueryBuilder);
         resultMap.put("brandList", brandList);
 
+        // 分组查询规格集合
+        Map<String, Set<String>> specList = searchSpecList(nativeSearchQueryBuilder);
+
+        // 将 specList 添加至 resultMap 中
+        resultMap.put("specList", specList);
+
         return resultMap;
+    }
+
+    private Map<String, Set<String>> searchSpecList(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+        // 添加分组查询条件
+        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuSpec").field("spec.keyword").size(10000));
+        // 分组查询
+        AggregatedPage<SkuInfo> aggregatedPage = elasticsearchTemplate.queryForPage(nativeSearchQueryBuilder.build(), SkuInfo.class);
+        // 获取规格分组数据
+        StringTerms stringTerms = aggregatedPage.getAggregations().get("skuSpec");
+        List<String> specList = new ArrayList<>();
+        // 遍历规格分组数据
+        for (StringTerms.Bucket bucket : stringTerms.getBuckets()) {
+            // 其中一个规格
+            String specName = bucket.getKeyAsString();
+            specList.add(specName);
+        }
+
+        Map<String, Set<String>> allSpec = getAllSpec(specList);
+        return allSpec;
+    }
+
+    /**
+     * 获取规格集合
+     *
+     * @param specList
+     * @return
+     */
+    private static Map<String, Set<String>> getAllSpec(List<String> specList) {
+        // 定义存储规格数据的 Map 集合
+        Map<String, Set<String>> allSpec = new HashMap<>();
+        for (String spec : specList) {
+            // 将规格字符串转为 Map 对象
+            Map<String, String> specMap = JSON.parseObject(spec, Map.class);
+            // specMap 键值对进行集合操作，并遍历
+            for (Map.Entry<String, String> specEntry : specMap.entrySet()) {
+                // 规格名称
+                String key = specEntry.getKey();
+                // 规格值
+                String value = specEntry.getValue();
+                // 查找规格名称对应的规格值 Set 集合数据
+                Set<String> specSet = allSpec.get(key);
+                if (specSet == null) {
+                    // 如果不存在 Set 集合数据，则定义一个 Set 集合
+                    specSet = new HashSet<>();
+                }
+                // 将规格值添加至 Set 集合中
+                specSet.add(value);
+                // 将规格名称和规格值 Set 集合添加至 allSpec 中
+                allSpec.put(key, specSet);
+            }
+        }
+        return allSpec;
     }
 
     private static NativeSearchQueryBuilder buildBasicQuery(Map<String, Object> searchMap) {
