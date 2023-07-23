@@ -17,6 +17,7 @@
     <module>shop-common</module>
     <module>shop-common-db</module>
     <module>shop-service/shop-service-canal</module>
+    <module>shop-service/shop-service-search</module>
   </modules>
 
   <properties>

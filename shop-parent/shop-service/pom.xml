@@ -12,6 +12,7 @@
   <modules>
     <module>shop-service-goods</module>
     <module>shop-service-file</module>
+    <module>shop-service-content</module>
   </modules>
   <artifactId>shop-service</artifactId>
   <description>

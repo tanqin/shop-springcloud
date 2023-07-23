@@ -11,6 +11,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>shop-service-goods-api</module>
+    <module>shop-service-content-api</module>
+    <module>shop-service-search-api</module>
   </modules>
   <artifactId>shop-service-api</artifactId>
   <description>
@@ -37,6 +39,11 @@
       <artifactId>persistence-api</artifactId>
       <version>1.0</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.shop</groupId>
+      <artifactId>shop-common-db</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

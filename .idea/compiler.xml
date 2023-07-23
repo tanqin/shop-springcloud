@@ -8,19 +8,25 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shop-common-db" />
         <module name="shop-service-canal" />
+        <module name="shop-service-search-api" />
+        <module name="shop-service-content" />
+        <module name="shop-service-search" />
         <module name="shop-service-file" />
         <module name="shop-eureka" />
         <module name="shop-service-goods" />
         <module name="shop-common" />
         <module name="shop-service-goods-api" />
+        <module name="shop-service-content-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="changgou-service-content-api" target="17" />
       <module name="code-template" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="changgou-service-content-api" options="-parameters" />
       <module name="shop-common" options="-parameters" />
       <module name="shop-common-db" options="-parameters" />
       <module name="shop-eureka" options="-parameters" />
@@ -29,9 +35,13 @@
       <module name="shop-service" options="" />
       <module name="shop-service-api" options="" />
       <module name="shop-service-canal" options="-parameters" />
+      <module name="shop-service-content" options="-parameters" />
+      <module name="shop-service-content-api" options="-parameters" />
       <module name="shop-service-file" options="-parameters" />
       <module name="shop-service-goods" options="-parameters" />
       <module name="shop-service-goods-api" options="-parameters" />
+      <module name="shop-service-search" options="-parameters" />
+      <module name="shop-service-search-api" options="-parameters" />
       <module name="shop-web" options="" />
     </option>
   </component>

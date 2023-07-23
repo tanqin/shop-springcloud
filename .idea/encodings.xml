@@ -6,12 +6,18 @@
     <file url="file://$PROJECT_DIR$/shop-parent/shop-eureka/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/changgou-service-content-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/shop-service-content-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/shop-service-content/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/shop-service-goods-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/shop-service-search-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service/shop-service-canal/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-parent/shop-service/shop-service-content/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service/shop-service-file/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service/shop-service-goods/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-parent/shop-service/shop-service-search/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shop-parent/shop-web/src/main/java" charset="UTF-8" />

@@ -7,6 +7,12 @@
         <option value="$PROJECT_DIR$/shop-parent/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/shop-parent/shop-service-api/changgou-service-content-api/pom.xml" />
+        <option value="$PROJECT_DIR$/shop-parent/shop-service-api/shop-service-content/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>
