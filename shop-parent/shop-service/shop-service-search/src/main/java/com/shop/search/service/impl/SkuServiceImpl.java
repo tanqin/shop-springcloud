@@ -67,12 +67,16 @@ public class SkuServiceImpl implements SkuService {
         // 集合搜索
         Map<String, Object> resultMap = searchList(nativeSearchQueryBuilder);
 
-        // 分组查询分类集合
-        List<String> categoryList = searchCategoryList(nativeSearchQueryBuilder);
-        resultMap.put("categoryList", categoryList);
-        // 分组查询品牌集合
-        List<String> brandList = searchBrandList(nativeSearchQueryBuilder);
-        resultMap.put("brandList", brandList);
+        if (searchMap == null || StringUtils.isEmpty(searchMap.get("categoryName"))) {
+            // 分组查询分类集合
+            List<String> categoryList = searchCategoryList(nativeSearchQueryBuilder);
+            resultMap.put("categoryList", categoryList);
+        }
+        if (searchMap == null || StringUtils.isEmpty(searchMap.get("brandName"))) {
+            // 分组查询品牌集合
+            List<String> brandList = searchBrandList(nativeSearchQueryBuilder);
+            resultMap.put("brandList", brandList);
+        }
 
         // 分组查询规格集合
         Map<String, Set<String>> specList = searchSpecList(nativeSearchQueryBuilder);
