@@ -73,6 +73,9 @@ public class SkuServiceImpl implements SkuService {
         // 分组查询分类集合
         List<String> categoryList = searchCategoryList(nativeSearchQueryBuilder);
         resultMap.put("categoryList", categoryList);
+        // 分组查询品牌集合
+        List<String> brandList = searchBrandList(nativeSearchQueryBuilder);
+        resultMap.put("brandList", brandList);
 
         return resultMap;
     }
@@ -145,5 +148,28 @@ public class SkuServiceImpl implements SkuService {
             categoryList.add(categoryName);
         }
         return categoryList;
+    }
+
+    /**
+     * 分组查询品牌集合
+     *
+     * @param nativeSearchQueryBuilder
+     * @return
+     */
+    private List<String> searchBrandList(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+        // 添加聚合查询
+        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuBrand").field("brandName"));
+        // 查询品牌数据
+        AggregatedPage<SkuInfo> aggregatedPage = elasticsearchTemplate.queryForPage(nativeSearchQueryBuilder.build(), SkuInfo.class);
+        // 获品牌数据
+        StringTerms stringTerms = aggregatedPage.getAggregations().get("skuBrand");
+        // 品牌集合数据
+        List<String> brandList = new ArrayList<>();
+        // 循环品牌集合数据
+        for (StringTerms.Bucket bucket : stringTerms.getBuckets()) {
+            String brandName = bucket.getKeyAsString();
+            brandList.add(brandName);
+        }
+        return brandList;
     }
 }
