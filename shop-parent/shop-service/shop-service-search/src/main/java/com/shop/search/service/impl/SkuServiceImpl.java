@@ -64,6 +64,20 @@ public class SkuServiceImpl implements SkuService {
      */
     @Override
     public Map<String, Object> search(Map<String, Object> searchMap) {
+        // 搜索条件封装
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = buildBasicQuery(searchMap);
+
+        // 集合搜索
+        Map<String, Object> resultMap = searchList(nativeSearchQueryBuilder);
+
+        // 分组查询分类集合
+        List<String> categoryList = searchCategoryList(nativeSearchQueryBuilder);
+        resultMap.put("categoryList", categoryList);
+
+        return resultMap;
+    }
+
+    private static NativeSearchQueryBuilder buildBasicQuery(Map<String, Object> searchMap) {
         // 创建搜索条件构建对象
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
@@ -77,27 +91,21 @@ public class SkuServiceImpl implements SkuService {
                 nativeSearchQueryBuilder.withQuery(QueryBuilders.matchQuery("name", keywords));
             }
         }
+        return nativeSearchQueryBuilder;
+    }
 
+    /**
+     * 集合搜索
+     *
+     * @param nativeSearchQueryBuilder
+     * @return
+     */
+    private Map<String, Object> searchList(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
         // 创建搜索条件对象
         NativeSearchQuery query = nativeSearchQueryBuilder.build();
 
         // 分页搜索
         AggregatedPage<SkuInfo> skuPage = elasticsearchTemplate.queryForPage(query, SkuInfo.class);
-
-        // 分组查询分类集合
-        // 添加聚合查询
-        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuCategory").field("categoryName"));
-        // 查询分类数据
-        AggregatedPage<SkuInfo> aggregatedPage = elasticsearchTemplate.queryForPage(nativeSearchQueryBuilder.build(), SkuInfo.class);
-        // 获分类数据
-        StringTerms stringTerms = aggregatedPage.getAggregations().get("skuCategory");
-        // 分类集合数据
-        List<String> categoryList = new ArrayList<>();
-        // 循环分类集合数据
-        for (StringTerms.Bucket bucket : stringTerms.getBuckets()) {
-            String categoryName = bucket.getKeyAsString();
-            categoryList.add(categoryName);
-        }
 
 
         // 获取搜索结果
@@ -111,11 +119,31 @@ public class SkuServiceImpl implements SkuService {
         // 设置返回结果 Map<String, Object>
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("rows", skuInfoList);
-        resultMap.put("categoryList", categoryList);
         resultMap.put("total", total);
         resultMap.put("totalPages", totalPages);
-
         return resultMap;
     }
 
+    /**
+     * 分组查询分类集合
+     *
+     * @param nativeSearchQueryBuilder
+     * @return
+     */
+    private List<String> searchCategoryList(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+        // 添加聚合查询
+        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuCategory").field("categoryName"));
+        // 查询分类数据
+        AggregatedPage<SkuInfo> aggregatedPage = elasticsearchTemplate.queryForPage(nativeSearchQueryBuilder.build(), SkuInfo.class);
+        // 获分类数据
+        StringTerms stringTerms = aggregatedPage.getAggregations().get("skuCategory");
+        // 分类集合数据
+        List<String> categoryList = new ArrayList<>();
+        // 循环分类集合数据
+        for (StringTerms.Bucket bucket : stringTerms.getBuckets()) {
+            String categoryName = bucket.getKeyAsString();
+            categoryList.add(categoryName);
+        }
+        return categoryList;
+    }
 }
