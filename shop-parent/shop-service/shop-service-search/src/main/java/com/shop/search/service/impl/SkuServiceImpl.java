@@ -7,6 +7,7 @@ import com.shop.goods.pojo.Sku;
 import com.shop.search.dao.SkuEsMapper;
 import com.shop.search.pojo.SkuInfo;
 import com.shop.search.service.SkuService;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
@@ -143,6 +144,9 @@ public class SkuServiceImpl implements SkuService {
         // 创建搜索条件构建对象
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
+        // 构建布尔查询
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
         // 获取搜索条件
         if (searchMap != null && searchMap.size() > 0) {
             // 获取搜索关键词
@@ -150,8 +154,21 @@ public class SkuServiceImpl implements SkuService {
 
             if (!StringUtils.isEmpty(keywords)) {
                 // 设置查询条件
-                nativeSearchQueryBuilder.withQuery(QueryBuilders.matchQuery("name", keywords));
+//                nativeSearchQueryBuilder.withQuery(QueryBuilders.matchQuery("name", keywords));
+                boolQueryBuilder.must(QueryBuilders.matchQuery("name", keywords));
             }
+
+            // 分类搜索
+            if (!StringUtils.isEmpty(searchMap.get("categoryName"))) {
+                boolQueryBuilder.must(QueryBuilders.termQuery("categoryName", searchMap.get("categoryName")));
+            }
+            // 品牌搜索
+            if (!StringUtils.isEmpty(searchMap.get("brandName"))) {
+                boolQueryBuilder.must(QueryBuilders.termQuery("brandName", searchMap.get("brandName")));
+            }
+
+            // 将 boolQueryBuilder 设置给 nativeSearchQueryBuilder
+            nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
         }
         return nativeSearchQueryBuilder;
     }
