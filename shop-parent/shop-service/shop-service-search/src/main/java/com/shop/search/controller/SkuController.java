@@ -30,7 +30,7 @@ public class SkuController {
      * 条件搜索
      */
     @GetMapping
-    public Map<String, Object> search(@RequestParam Map<String, Object> searchMap) {
+    public Map<String, Object> search(@RequestParam Map<String, String> searchMap) {
         return skuService.search(searchMap);
     }
 

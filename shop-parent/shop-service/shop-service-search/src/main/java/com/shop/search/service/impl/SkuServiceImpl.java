@@ -12,6 +12,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
@@ -61,7 +62,7 @@ public class SkuServiceImpl implements SkuService {
      * @return
      */
     @Override
-    public Map<String, Object> search(Map<String, Object> searchMap) {
+    public Map<String, Object> search(Map<String, String> searchMap) {
         // 搜索条件封装
         NativeSearchQueryBuilder nativeSearchQueryBuilder = buildBasicQuery(searchMap);
 
@@ -146,7 +147,7 @@ public class SkuServiceImpl implements SkuService {
      * @param searchMap
      * @return
      */
-    private static NativeSearchQueryBuilder buildBasicQuery(Map<String, Object> searchMap) {
+    private NativeSearchQueryBuilder buildBasicQuery(Map<String, String> searchMap) {
         // 创建搜索条件构建对象
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
@@ -173,7 +174,7 @@ public class SkuServiceImpl implements SkuService {
                 boolQueryBuilder.must(QueryBuilders.termQuery("brandName", searchMap.get("brandName")));
             }
             // 规格搜索
-            for (Map.Entry<String, Object> searchEntry : searchMap.entrySet()) {
+            for (Map.Entry<String, String> searchEntry : searchMap.entrySet()) {
                 String searchKey = searchEntry.getKey();
                 if (searchKey.startsWith("spec")) {
                     boolQueryBuilder.must(QueryBuilders.termQuery("specMap." + searchKey.substring(5) + ".keyword", searchEntry.getValue()));
@@ -192,11 +193,29 @@ public class SkuServiceImpl implements SkuService {
                     }
                 }
             }
+            // 分页搜索
+            Integer pageNum = pagePageNum(searchMap);
+            Integer pageSize = 30;
+            nativeSearchQueryBuilder.withPageable(PageRequest.of(pageNum - 1, pageSize));
 
             // 将 boolQueryBuilder 设置给 nativeSearchQueryBuilder
             nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
         }
         return nativeSearchQueryBuilder;
+    }
+
+    /**
+     * 获取当前页
+     */
+    private Integer pagePageNum(Map<String, String> searchMap) {
+        if (searchMap != null) {
+            try {
+                String pageNum = searchMap.get("pageNum");
+                return Integer.parseInt(pageNum);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return 1;
     }
 
     /**
