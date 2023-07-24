@@ -140,6 +140,12 @@ public class SkuServiceImpl implements SkuService {
         return allSpec;
     }
 
+    /**
+     * 基础搜索
+     *
+     * @param searchMap
+     * @return
+     */
     private static NativeSearchQueryBuilder buildBasicQuery(Map<String, Object> searchMap) {
         // 创建搜索条件构建对象
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
@@ -165,6 +171,13 @@ public class SkuServiceImpl implements SkuService {
             // 品牌搜索
             if (!StringUtils.isEmpty(searchMap.get("brandName"))) {
                 boolQueryBuilder.must(QueryBuilders.termQuery("brandName", searchMap.get("brandName")));
+            }
+            // 规格搜索
+            for (Map.Entry<String, Object> searchEntry : searchMap.entrySet()) {
+                String searchKey = searchEntry.getKey();
+                if (searchKey.startsWith("spec")) {
+                    boolQueryBuilder.must(QueryBuilders.termQuery("specMap." + searchKey.substring(5) + ".keyword", searchEntry.getValue()));
+                }
             }
 
             // 将 boolQueryBuilder 设置给 nativeSearchQueryBuilder
