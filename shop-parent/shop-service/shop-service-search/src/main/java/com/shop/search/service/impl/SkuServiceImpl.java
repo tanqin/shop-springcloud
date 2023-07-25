@@ -11,6 +11,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -193,10 +195,20 @@ public class SkuServiceImpl implements SkuService {
                     }
                 }
             }
+
+            // 排序搜索
+            String sortField = searchMap.get("sortField");
+            String sortRule = searchMap.get("sortRule");
+            if (!StringUtils.isEmpty(sortField) && !StringUtils.isEmpty(sortRule)) {
+                // 指定排序的域和排序规则
+                nativeSearchQueryBuilder.withSort(new FieldSortBuilder(sortField).order(SortOrder.valueOf(sortRule)));
+            }
+
             // 分页搜索
             Integer pageNum = pagePageNum(searchMap);
             Integer pageSize = 30;
             nativeSearchQueryBuilder.withPageable(PageRequest.of(pageNum - 1, pageSize));
+
 
             // 将 boolQueryBuilder 设置给 nativeSearchQueryBuilder
             nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
