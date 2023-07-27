@@ -80,7 +80,7 @@ public class SkuServiceImpl implements SkuService {
         // 集合搜索
         Map<String, Object> resultMap = searchList(nativeSearchQueryBuilder);
 
-        if (searchMap == null || StringUtils.isEmpty(searchMap.get("categoryName"))) {
+      /*  if (searchMap == null || StringUtils.isEmpty(searchMap.get("categoryName"))) {
             // 分组查询分类集合
             List<String> categoryList = searchCategoryList(nativeSearchQueryBuilder);
             resultMap.put("categoryList", categoryList);
@@ -95,9 +95,68 @@ public class SkuServiceImpl implements SkuService {
         Map<String, Set<String>> specList = searchSpecList(nativeSearchQueryBuilder);
 
         // 将 specList 添加至 resultMap 中
-        resultMap.put("specList", specList);
+        resultMap.put("specList", specList);*/
 
+        Map<String, Object> groupSearchMap = searchGroupList(nativeSearchQueryBuilder, searchMap);
+
+        // 将分组搜索结果集合并到搜索结果集中
+        resultMap.putAll(groupSearchMap);
         return resultMap;
+    }
+
+    /**
+     * 分组搜索。分类、品牌、规格搜索
+     */
+    private Map<String, Object> searchGroupList(NativeSearchQueryBuilder nativeSearchQueryBuilder, Map<String, String> searchMap) {
+        // 添加聚合查询
+        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuCategory").field("categoryName"));
+        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuBrand").field("brandName"));
+        nativeSearchQueryBuilder.addAggregation(AggregationBuilders.terms("skuSpec").field("spec.keyword").size(10000));
+
+        // 分组搜索结果集
+        Map<String, Object> groupSearchMap = new HashMap<>();
+
+        // 查询数据
+        AggregatedPage<SkuInfo> aggregatedPage = elasticsearchTemplate.queryForPage(nativeSearchQueryBuilder.build(), SkuInfo.class);
+
+        if (searchMap == null || StringUtils.isEmpty(searchMap.get("categoryName"))) {
+            // 获取分类数据
+            StringTerms categoryStringTerms = aggregatedPage.getAggregations().get("skuCategory");
+            // 分类集合数据
+            List<String> categoryList = getGroupList(categoryStringTerms);
+            groupSearchMap.put("categoryList", categoryList);
+        }
+
+        if (searchMap == null || StringUtils.isEmpty(searchMap.get("brandName"))) {
+            // 获取品牌数据
+            StringTerms brandStringTerms = aggregatedPage.getAggregations().get("skuBrand");
+            List<String> brandList = getGroupList(brandStringTerms);
+            groupSearchMap.put("brandList", brandList);
+        }
+
+        // 获取规格数据
+        StringTerms specStringTerms = aggregatedPage.getAggregations().get("skuSpec");
+        List<String> specList = getGroupList(specStringTerms);
+        Map<String, Set<String>> allSpec = getAllSpec(specList);
+        groupSearchMap.put("specList", allSpec);
+
+        return groupSearchMap;
+    }
+
+    /**
+     * 获取分组列表
+     *
+     * @param stringTerms
+     * @return
+     */
+    private List<String> getGroupList(StringTerms stringTerms) {
+        List<String> groupList = new ArrayList<>();
+        for (StringTerms.Bucket bucket : stringTerms.getBuckets()) {
+            String groupName = bucket.getKeyAsString();
+            groupList.add(groupName);
+        }
+        return groupList;
+
     }
 
     private Map<String, Set<String>> searchSpecList(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
